@@ -37,33 +37,19 @@ def update_rho(
     t = tau(k, c, p)
 
     # Direction logic ONLY (may depend on residuals)
-    # Compute imbalance ratio
-    if r_norm > eps and s_norm > eps:
-        ratio = max(r_norm / s_norm, s_norm / r_norm)
-    else:
-        ratio = 1.0
-    
-    # Adjust step size based on ratio, but keep it bounded
-    # Use a moderate scaling: min(ratio / mu, 1.5) to prevent excessive updates
-    scale = min(ratio / mu, 1.5)
-    adjusted_t = t * (1.0 + 0.5 * scale)  # Increase t by up to 50% when ratio is large
-    
     if r_norm > mu * max(s_norm, eps):
-        # Use adjusted step size for update
-        factor = 1.0 + adjusted_t
-        new_rho = rho * factor
+        new_rho = rho * (1.0 + t)
         mode = "mul"
 
     elif s_norm > mu * max(r_norm, eps):
-        factor = 1.0 + adjusted_t
-        new_rho = rho / factor
+        new_rho = rho / (1.0 + t)
         mode = "div"
 
     else:
         new_rho = rho
         mode = "keep"
 
-    # Auxiliary scalar: include information about adjustment
-    aux = adjusted_t
+    # Auxiliary scalar: purely tau_k (no residual dependence)
+    aux = t
 
     return new_rho, aux, mode

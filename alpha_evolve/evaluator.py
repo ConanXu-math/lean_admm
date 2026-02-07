@@ -24,14 +24,10 @@ from pathlib import Path
 import uuid
 import subprocess
 
-LEAN_PROJECT_ROOT = Path("./adaptive_admm").resolve()
-LEAN_DIR = (
-    LEAN_PROJECT_ROOT
-    / "Optlib"
-    / "Algorithm"
-    / "AdaptiveADMM"
-    / "Strategies"
-)
+# optlib 项目根目录（lean_admm/alpha_evolve/ -> optlib/）
+_OPTLIB_ROOT = Path(__file__).resolve().parent.parent.parent
+LEAN_PROJECT_ROOT = _OPTLIB_ROOT
+LEAN_DIR = LEAN_PROJECT_ROOT / "Optlib" / "Algorithm" / "AdaptiveADMM" / "Strategies"
 
 
 def write_unique_lean(code: str) -> Path:

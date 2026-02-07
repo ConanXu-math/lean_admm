@@ -249,9 +249,12 @@ def generate_auto_lean_file_from_file(
 
 
 if __name__ == "__main__":
-    file_dir = "./alpha_evolve/openevolve_output/best/best_program.py"
-    stored_file = "./adaptive_admm/Optlib/Algorithm/AdaptiveADMM/Strategies/"
+    # 基于脚本位置计算路径，确保任意工作目录下都能正确运行
+    _script_dir = pathlib.Path(__file__).resolve().parent
+    _optlib_root = _script_dir.parent.parent
+    file_dir = _script_dir / "openevolve_output" / "best" / "best_program.py"
+    stored_file = _optlib_root / "Optlib" / "Algorithm" / "AdaptiveADMM" / "Strategies"
     generate_auto_lean_file_from_file(
-        file_path=file_dir,
-        stored_file_path=stored_file,
+        file_path=str(file_dir),
+        stored_file_path=str(stored_file),
     )

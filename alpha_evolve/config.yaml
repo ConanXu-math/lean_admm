@@ -9,16 +9,20 @@ checkpoint_interval: 5
 # LLM configuration
 # -------------------------------
 llm:
+  # 从环境变量读取，主进程与 worker 均需能拿到（search_admm 入口处 load_dotenv）
+  api_key: ${DEEPSEEK_API_KEY}
+  api_base: "https://api.deepseek.com/v1"
   primary_model: "deepseek-chat"
   primary_model_weight: 0.8
   secondary_model: "deepseek-chat"
   secondary_model_weight: 0.2
-  api_base: "https://api.deepseek.com"
 
   # Slightly higher temperature encourages rule diversity
   temperature: 0.9
   max_tokens: 4096
   timeout: 180
+  retries: 5
+  retry_delay: 10
 
 # -------------------------------
 # Prompt configuration
@@ -125,7 +129,8 @@ evaluator:
   # Allows fast heuristics to filter obviously bad programs
   cascade_thresholds: [0.5, 1.0]
 
-  parallel_evaluations: 2
+  # 1 worker 减少限流导致的空 response
+  parallel_evaluations: 1
 
 # -------------------------------
 # Evolution behavior
